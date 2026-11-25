@@ -1,0 +1,1350 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ФотоКонкурс — Система оценки</title>
+
+<style>
+:root {
+  --green:#16865a;
+  --green-light:#e8f6ee;
+  --bg:#f5f7f5;
+  --card:#fff;
+  --text:#202a24;
+  --muted:#849087;
+  --border:#e8ede9;
+  --gold:#e8b642;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:245px;background:#fff;border-right:1px solid var(--border);padding:26px 17px;position:fixed;inset:0 auto 0 0;z-index:5}
+.logo{display:flex;align-items:center;gap:12px;padding:5px 8px 30px}
+.logo-icon{width:43px;height:43px;background:var(--green);color:white;border-radius:14px;display:grid;place-items:center;font-size:23px}
+.logo b{font-size:17px}
+.logo small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.nav-label{font-size:10px;letter-spacing:1.4px;color:#a0aaa2;padding:10px 12px}
+.nav button{width:100%;border:0;background:none;padding:13px 12px;text-align:left;border-radius:10px;color:#66716a;font-size:14px;margin:3px 0}
+.nav button.active,.nav button:hover{background:var(--green-light);color:var(--green);font-weight:700}
+.nav button span{display:inline-block;width:28px;font-size:17px}
+.sidebar-bottom{position:absolute;bottom:25px;left:20px;right:20px;background:#f5f8f5;padding:15px;border-radius:13px;font-size:12px;color:var(--muted);line-height:1.6}
+.main{margin-left:245px;width:calc(100% - 245px);padding:30px 38px 60px;max-width:1700px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:30px}
+.eyebrow{color:var(--green);font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}
+h1{font-size:27px;margin:7px 0}
+.subtitle{font-size:13px;color:var(--muted)}
+.top-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:1px solid var(--border);background:white;padding:11px 15px;border-radius:10px;font-size:13px;font-weight:600;color:var(--text)}
+.btn.primary{background:var(--green);border-color:var(--green);color:white}
+.btn:hover{filter:brightness(.97)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:24px}
+.stat{background:white;border:1px solid var(--border);border-radius:15px;padding:19px}
+.stat-top{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.stat-icon{font-size:20px}
+.stat strong{display:block;font-size:27px;margin-top:13px}
+.stat small{color:var(--muted);font-size:11px}
+.panel{background:white;border:1px solid var(--border);border-radius:16px;padding:21px;margin-bottom:20px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.panel-head h2{font-size:17px;margin:0}
+.panel-head p{font-size:12px;color:var(--muted);margin:5px 0 0}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.search{flex:1;min-width:180px;padding:11px 13px;border:1px solid var(--border);border-radius:10px;outline:none}
+select{padding:10px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.participant{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:white;transition:.2s}
+.participant:hover{box-shadow:0 8px 25px #1c54301a;transform:translateY(-2px)}
+.photo{height:205px;background:#edf2ee;position:relative;overflow:hidden;cursor:pointer}
+.photo img{width:100%;height:100%;object-fit:cover}
+.photo-count{position:absolute;right:10px;bottom:10px;background:#0009;color:white;border-radius:20px;padding:5px 9px;font-size:11px}
+.card-body{padding:15px}
+.person-name{font-weight:750;font-size:14px;line-height:1.4}
+.person-meta{color:var(--muted);font-size:12px;margin-top:5px}
+.card-score{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:13px;margin-top:13px}
+.score-number{font-weight:800;color:var(--green);font-size:19px}
+.score-label{font-size:11px;color:var(--muted)}
+.card-buttons{display:flex;gap:8px;margin-top:13px}
+.card-buttons button{flex:1;padding:9px 7px;font-size:12px;border-radius:8px}
+.rating-form{margin-top:13px;border-top:1px solid var(--border);padding-top:13px}
+.rating-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0;font-size:12px}
+.rating-row input{width:65px;border:1px solid var(--border);padding:8px;border-radius:8px;text-align:center}
+.total{display:flex;justify-content:space-between;background:var(--green-light);padding:12px;border-radius:9px;margin-top:12px;font-size:13px;font-weight:750}
+.hidden{display:none!important}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--muted);font-size:11px;font-weight:650;padding:13px 10px;border-bottom:1px solid var(--border)}
+td{padding:14px 10px;border-bottom:1px solid var(--border)}
+.rank{font-weight:800;color:var(--green)}
+.rank.gold{color:#d49b20}
+.status{padding:5px 9px;border-radius:20px;background:#f0f3f0;font-size:11px}
+.status.done{background:var(--green-light);color:var(--green)}
+.empty{text-align:center;padding:45px;color:var(--muted)}
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.podium-card{background:#fff;border:1px solid var(--border);border-radius:13px;text-align:center;padding:20px 10px}
+.podium-card .medal{font-size:28px}
+.podium-card strong{display:block;font-size:14px;margin:9px 0}
+.podium-card b{font-size:24px;color:var(--green)}
+.criteria{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.criteria label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}
+.criteria input{width:100%;padding:12px;border:1px solid var(--border);border-radius:9px}
+.note{font-size:12px;color:var(--muted);line-height:1.6}
+.modal{position:fixed;inset:0;background:#101813df;z-index:20;display:none;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal-content{max-width:950px;width:100%;max-height:95vh;background:white;border-radius:15px;overflow:auto;padding:15px}
+.modal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.modal-images{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.modal-images img{width:100%;max-height:70vh;object-fit:contain;background:#f1f1f1}
+.modal-close{border:0;background:#eee;border-radius:8px;padding:9px 13px}
+.toast{position:fixed;bottom:25px;right:25px;background:#1f3026;color:white;padding:13px 19px;border-radius:10px;z-index:30;display:none;font-size:13px}
+.sync-line{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:10px}
+.sync-dot{width:9px;height:9px;border-radius:50%;background:#d49b20;display:inline-block}
+.sync-dot.online{background:#16865a}
+.sync-dot.error{background:#d34b4b}
+footer{text-align:center;color:var(--muted);font-size:11px;margin-top:30px}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){
+.sidebar{width:65px;padding:15px 7px}
+.logo{padding:4px 2px 25px}.logo-icon{width:46px;height:46px}
+.logo-text,.nav-label,.nav button .nav-text,.sidebar-bottom{display:none}
+.nav button{text-align:center;padding:13px 3px}
+.nav button span{width:auto}
+.main{margin-left:65px;width:calc(100% - 65px);padding:20px 13px}
+.topbar{align-items:flex-start;flex-direction:column}
+.grid{grid-template-columns:1fr}
+.stats{gap:8px}
+.stat{padding:13px}
+.stat strong{font-size:22px}
+.podium{gap:6px}
+.podium-card{padding:14px 5px}
+.podium-card strong{font-size:11px}
+.criteria{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🌿</div>
+    <div class="logo-text"><b>ФотоКонкурс</b><small>СИСТЕМА ОЦЕНКИ</small></div>
+  </div>
+
+  <div class="nav-label">ГЛАВНОЕ МЕНЮ</div>
+
+  <nav class="nav">
+    <button class="active" data-page="dashboard"><span>▦</span><span class="nav-text">Обзор</span></button>
+    <button data-page="participants"><span>▧</span><span class="nav-text">Участники</span></button>
+    <button data-page="rating"><span>✎</span><span class="nav-text">Оценивание</span></button>
+    <button data-page="results"><span>🏆</span><span class="nav-text">Итоговый рейтинг</span></button>
+    <button data-page="settings"><span>⚙</span><span class="nav-text">Настройки</span></button>
+  </nav>
+
+  <div class="sidebar-bottom">
+    🌱 <b>Мой день в стиле ЗОЖ</b><br>
+    Фотоконкурс · 2026<br>
+    Система оценки работ участников
+  </div>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+  <div>
+    <div class="eyebrow">КОНКУРС · 2026</div>
+    <h1 id="pageTitle">Обзор конкурса</h1>
+    <div class="subtitle" id="pageSubtitle">Добро пожаловать в систему оценки фотографий</div>
+  </div>
+
+  <div class="top-actions">
+    <button class="btn" onclick="exportCSV()">↓ Экспорт оценок</button>
+    <button class="btn primary" onclick="showPage('rating')">+ Оценить работы</button>
+  </div>
+</header>
+
+<section id="dashboard" class="page">
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-top">Всего заявок <span class="stat-icon">👥</span></div>
+      <strong id="statTotal">0</strong>
+      <small>Участников конкурса</small>
+    </div>
+
+    <div class="stat">
+      <div class="stat-top">Оценено <span class="stat-icon">✓</span></div>
+      <strong id="statDone">0</strong>
+      <small>Полностью оценённых работ</small>
+    </div>
+
+    <div class="stat">
+      <div class="stat-top">Средний балл <span class="stat-icon">📊</span></div>
+      <strong id="statAvg">—</strong>
+      <small>Из 40 возможных</small>
+    </div>
+
+    <div class="stat">
+      <div class="stat-top">Максимальный балл <span class="stat-icon">🏆</span></div>
+      <strong id="statMax">—</strong>
+      <small>Лучший результат</small>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Последние участники</h2>
+        <p>Работы, добавленные в конкурс</p>
+      </div>
+      <button class="btn" onclick="showPage('participants')">Все участники →</button>
+    </div>
+    <div class="grid" id="recentGrid"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Как работает оценивание</h2>
+        <p>Порядок работы жюри</p>
+      </div>
+    </div>
+    <p class="note">
+      1. Откройте раздел «Оценивание».<br>
+      2. Посмотрите фотографию участника.<br>
+      3. Поставьте баллы по четырём критериям от 0 до 10.<br>
+      4. Система автоматически рассчитает сумму из 40 баллов.<br>
+      5. После оценивания всех работ откройте итоговый рейтинг.
+    </p>
+  </div>
+</section>
+
+<section id="participants" class="page hidden">
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Участники конкурса</h2>
+        <p id="participantCount">Все конкурсные работы</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input class="search" id="search" placeholder="Поиск по ФИО..." oninput="renderParticipants()">
+      <select id="groupFilter" onchange="renderParticipants()">
+        <option value="">Все группы</option>
+      </select>
+      <select id="sortFilter" onchange="renderParticipants()">
+        <option value="default">По порядку</option>
+        <option value="score">По баллам</option>
+        <option value="name">По имени</option>
+      </select>
+    </div>
+
+    <div class="grid" id="participantsGrid"></div>
+  </div>
+</section>
+
+<section id="rating" class="page hidden">
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Оценивание работ</h2>
+        <p>Каждый критерий оценивается от 0 до 10 баллов</p>
+      </div>
+      <span class="status">Максимум: 40 баллов</span>
+    </div>
+
+    <div class="toolbar">
+      <input class="search" id="ratingSearch" placeholder="Найти участника..." oninput="renderRating()">
+      <select id="ratingGroup" onchange="renderRating()">
+        <option value="">Все группы</option>
+      </select>
+    </div>
+
+    <div id="ratingGrid" class="grid"></div>
+  </div>
+</section>
+
+<section id="results" class="page hidden">
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>🏆 Победители конкурса</h2>
+        <p>Три лучших результата</p>
+      </div>
+    </div>
+    <div class="podium" id="podium"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Общий рейтинг</h2>
+        <p>Сортировка по сумме набранных баллов</p>
+      </div>
+      <button class="btn" onclick="exportCSV()">↓ Скачать CSV</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>МЕСТО</th>
+            <th>УЧАСТНИК</th>
+            <th>ГРУППА</th>
+            <th>БАЛЛЫ</th>
+            <th>СТАТУС</th>
+          </tr>
+        </thead>
+        <tbody id="resultsTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="settings" class="page hidden">
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Критерии оценивания</h2>
+        <p>Измените названия критериев под положение конкурса</p>
+      </div>
+    </div>
+
+    <div class="criteria" id="criteriaFields"></div>
+    <button class="btn primary" style="margin-top:18px" onclick="saveCriteria()">Сохранить критерии</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Данные и сохранение</h2>
+        <p>Управление конкурсом</p>
+      </div>
+    </div>
+
+    <p class="note">
+      Оценки и критерии сохраняются в общей Google Таблице.
+      Резервная копия также может быть сохранена на вашем устройстве.
+    </p>
+
+    <div class="sync-line">
+      <span class="sync-dot" id="syncDot"></span>
+      <span id="syncStatus">Подключение к базе данных...</span>
+    </div>
+
+    <div class="toolbar" style="margin-top:15px">
+      <button class="btn" onclick="exportCSV()">Экспортировать оценки CSV</button>
+      <button class="btn" onclick="exportBackup()">Скачать резервную копию JSON</button>
+      <label class="btn">
+        Импортировать резервную копию
+        <input type="file" accept=".json" hidden onchange="importBackup(event)">
+      </label>
+    </div>
+
+    <button class="btn" style="color:#c43e3e" onclick="resetScores()">Сбросить все оценки</button>
+  </div>
+
+  <div class="panel">
+    <h2 style="font-size:16px">Информация о системе</h2>
+    <p class="note">
+      ФотоКонкурс · Система оценки<br>
+      Конкурс: «Мой день в стиле ЗОЖ»<br>
+      Максимальный результат: 40 баллов<br>
+      Хранилище: Google Таблицы
+    </p>
+  </div>
+</section>
+
+<footer>ФОТОКОНКУРС · МОЙ ДЕНЬ В СТИЛЕ ЗОЖ · 2026</footer>
+
+</main>
+</div>
+
+<div class="modal" id="photoModal" onclick="closeModal(event)">
+  <div class="modal-content">
+    <div class="modal-top">
+      <b id="modalTitle">Фотографии участника</b>
+      <button class="modal-close" onclick="closeModal()">✕ Закрыть</button>
+    </div>
+    <div class="modal-images" id="modalImages"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   НАСТРОЙКИ ПОДКЛЮЧЕНИЯ
+========================================================= */
+
+const API_URL = "https://script.google.com/macros/s/AKfycby7JaliTIaevfmHzZ4HmjVq7vxGFtcYoLNZIObG4Z1fB-78KB0-9OE_MLepsFP1DllJ/exec";
+
+const DATA_URL = "./data.json";
+
+const STORAGE_KEY = "photoContestData";
+
+const defaultCriteria = [
+  "Соответствие теме конкурса",
+  "Творческий подход и оригинальность",
+  "Качество и композиция фотографии",
+  "Общее впечатление"
+];
+
+let participants = [];
+let criteria = [...defaultCriteria];
+
+let databaseConnected = false;
+let scoreTimers = new Map();
+let activeRequests = 0;
+
+/* =========================================================
+   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+========================================================= */
+
+function safe(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[c]);
+}
+
+function toast(message) {
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.style.display = "block";
+
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => {
+    el.style.display = "none";
+  }, 2600);
+}
+
+function setSyncStatus(message, state = "loading") {
+  const text = document.getElementById("syncStatus");
+  const dot = document.getElementById("syncDot");
+
+  if (!text || !dot) return;
+
+  text.textContent = message;
+  dot.className = "sync-dot";
+
+  if (state === "online") dot.classList.add("online");
+  if (state === "error") dot.classList.add("error");
+}
+
+function normalizeScores(scores) {
+  if (!Array.isArray(scores)) {
+    return [null, null, null, null];
+  }
+
+  return [0, 1, 2, 3].map(i => {
+    const value = scores[i];
+
+    if (value === null || value === undefined || value === "") {
+      return null;
+    }
+
+    const number = Number(value);
+
+    if (!Number.isInteger(number) || number < 0 || number > 10) {
+      return null;
+    }
+
+    return number;
+  });
+}
+
+function normalizeParticipant(p, index) {
+  return {
+    id: p.id ?? index + 1,
+    name: String(p.name || "Без имени"),
+    group: String(p.group || "Не указана"),
+    photos: Array.isArray(p.photos) ? p.photos : [],
+    scores: [null, null, null, null]
+  };
+}
+
+/* =========================================================
+   JSONP — СВЯЗЬ С GOOGLE APPS SCRIPT
+========================================================= */
+
+function jsonp(action, params = {}) {
+  return new Promise((resolve, reject) => {
+    const callbackName = "photoContestCallback_" +
+      Date.now() + "_" + Math.floor(Math.random() * 1000000);
+
+    const script = document.createElement("script");
+    const url = new URL(API_URL);
+
+    url.searchParams.set("action", action);
+    url.searchParams.set("callback", callbackName);
+    url.searchParams.set("_", Date.now());
+
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(
+        key,
+        typeof value === "string" ? value : JSON.stringify(value)
+      );
+    });
+
+    let finished = false;
+
+    const cleanup = () => {
+      delete window[callbackName];
+      script.remove();
+      clearTimeout(timeout);
+    };
+
+    const timeout = setTimeout(() => {
+      if (finished) return;
+      finished = true;
+      cleanup();
+      reject(new Error("Превышено время ожидания ответа Google Таблицы"));
+    }, 15000);
+
+    window[callbackName] = (data) => {
+      if (finished) return;
+      finished = true;
+      cleanup();
+
+      if (!data || data.success === false || data.error) {
+        reject(new Error(data?.error || "Ошибка ответа сервера"));
+        return;
+      }
+
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      if (finished) return;
+      finished = true;
+      cleanup();
+      reject(new Error("Не удалось подключиться к Google Apps Script"));
+    };
+
+    script.src = url.toString();
+    document.head.appendChild(script);
+  });
+}
+
+/* =========================================================
+   ЛОКАЛЬНАЯ РЕЗЕРВНАЯ КОПИЯ
+========================================================= */
+
+function saveLocal() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      participants: participants.map(p => ({
+        id: p.id,
+        name: p.name,
+        group: p.group,
+        scores: p.scores
+      })),
+      criteria
+    }));
+  } catch (error) {
+    console.warn("Не удалось сохранить локальную копию:", error);
+  }
+}
+
+function loadLocal() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+
+    if (!saved) return;
+
+    if (Array.isArray(saved.participants)) {
+      saved.participants.forEach(savedPerson => {
+        const p = participants.find(x => String(x.id) === String(savedPerson.id));
+
+        if (p && Array.isArray(savedPerson.scores)) {
+          p.scores = normalizeScores(savedPerson.scores);
+        }
+      });
+    }
+
+    if (Array.isArray(saved.criteria) && saved.criteria.length === 4) {
+      criteria = saved.criteria.map(String);
+    }
+  } catch (error) {
+    console.warn("Локальная копия не загружена:", error);
+  }
+}
+
+/* =========================================================
+   ЗАГРУЗКА УЧАСТНИКОВ ИЗ DATA.JSON
+========================================================= */
+
+async function loadParticipants() {
+  const response = await fetch(DATA_URL, {
+    cache: "no-store"
+  });
+
+  if (!response.ok) {
+    throw new Error("Не удалось загрузить data.json");
+  }
+
+  const data = await response.json();
+
+  if (!Array.isArray(data.participants)) {
+    throw new Error("В data.json отсутствует массив participants");
+  }
+
+  participants = data.participants.map(normalizeParticipant);
+
+  if (!participants.length) {
+    throw new Error("В data.json нет участников");
+  }
+}
+
+/* =========================================================
+   ЗАГРУЗКА ОЦЕНОК И КРИТЕРИЕВ ИЗ GOOGLE ТАБЛИЦЫ
+========================================================= */
+
+async function loadDatabase() {
+  setSyncStatus("Подключение к Google Таблице...");
+
+  try {
+    const data = await jsonp("getData");
+
+    const remoteParticipants = Array.isArray(data.participants)
+      ? data.participants
+      : [];
+
+    remoteParticipants.forEach(remote => {
+      const p = participants.find(x => String(x.id) === String(remote.id));
+
+      if (!p) return;
+
+      if (Array.isArray(remote.scores)) {
+        p.scores = normalizeScores(remote.scores);
+      }
+    });
+
+    if (Array.isArray(data.criteria) && data.criteria.length === 4) {
+      criteria = data.criteria.map(String);
+    }
+
+    databaseConnected = true;
+    saveLocal();
+
+    setSyncStatus("Подключено к Google Таблице", "online");
+
+    return true;
+  } catch (error) {
+    console.error("Ошибка загрузки Google Таблицы:", error);
+
+    databaseConnected = false;
+
+    setSyncStatus("Нет связи с Google Таблицей. Используется локальная копия.", "error");
+
+    return false;
+  }
+}
+
+/* =========================================================
+   СОХРАНЕНИЕ ОЦЕНКИ ОДНОГО УЧАСТНИКА
+========================================================= */
+
+async function saveParticipantToDatabase(p) {
+  if (!p) return false;
+
+  try {
+    activeRequests++;
+
+    const result = await jsonp("saveScore", {
+      id: String(p.id),
+      name: p.name,
+      group: p.group,
+      scores: JSON.stringify(p.scores)
+    });
+
+    databaseConnected = true;
+    setSyncStatus("Изменения сохранены в Google Таблице", "online");
+
+    return result.success !== false;
+  } catch (error) {
+    console.error("Ошибка сохранения оценки:", error);
+
+    databaseConnected = false;
+    setSyncStatus("Ошибка сохранения. Данные остались в локальной копии.", "error");
+
+    return false;
+  } finally {
+    activeRequests = Math.max(0, activeRequests - 1);
+  }
+}
+
+function scheduleScoreSave(p) {
+  saveLocal();
+
+  if (scoreTimers.has(p.id)) {
+    clearTimeout(scoreTimers.get(p.id));
+  }
+
+  const timer = setTimeout(async () => {
+    scoreTimers.delete(p.id);
+
+    const success = await saveParticipantToDatabase(p);
+
+    if (!success) {
+      toast("Не удалось отправить оценку в Google Таблицу");
+    }
+  }, 500);
+
+  scoreTimers.set(p.id, timer);
+}
+
+async function saveOne(id) {
+  const p = participants.find(x => String(x.id) === String(id));
+  if (!p) return;
+
+  if (scoreTimers.has(p.id)) {
+    clearTimeout(scoreTimers.get(p.id));
+    scoreTimers.delete(p.id);
+  }
+
+  saveLocal();
+
+  const success = await saveParticipantToDatabase(p);
+
+  if (success) {
+    toast("Оценка сохранена в Google Таблицу");
+  } else {
+    toast("Ошибка сохранения. Проверь подключение.");
+  }
+}
+
+/* =========================================================
+   КРИТЕРИИ ОЦЕНИВАНИЯ
+========================================================= */
+
+async function saveCriteria() {
+  const fields = [0, 1, 2, 3].map(i => {
+    const field = document.getElementById("criterion-" + i);
+    return field.value.trim() || defaultCriteria[i];
+  });
+
+  criteria = fields;
+  saveLocal();
+
+  renderCriteria();
+  renderRating();
+
+  try {
+    await jsonp("saveCriteria", {
+      criteria: JSON.stringify(criteria)
+    });
+
+    databaseConnected = true;
+    setSyncStatus("Критерии сохранены в Google Таблицу", "online");
+    toast("Критерии сохранены");
+  } catch (error) {
+    console.error(error);
+    setSyncStatus("Не удалось сохранить критерии в Google Таблицу", "error");
+    toast("Ошибка сохранения критериев");
+  }
+}
+
+function renderCriteria() {
+  document.getElementById("criteriaFields").innerHTML = criteria.map((c, i) => `
+    <div>
+      <label>Критерий ${i + 1} · максимум 10 баллов</label>
+      <input id="criterion-${i}" value="${safe(c)}">
+    </div>
+  `).join("");
+}
+
+/* =========================================================
+   РАСЧЁТ ОЦЕНОК
+========================================================= */
+
+function total(p) {
+  if (!p.scores.every(x =>
+    x !== null &&
+    x !== "" &&
+    Number.isFinite(Number(x))
+  )) {
+    return null;
+  }
+
+  return p.scores.reduce((a, b) => a + Number(b), 0);
+}
+
+function isDone(p) {
+  return total(p) !== null;
+}
+
+/* =========================================================
+   НАВИГАЦИЯ
+========================================================= */
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(x => {
+    x.classList.add("hidden");
+  });
+
+  document.getElementById(id).classList.remove("hidden");
+
+  document.querySelectorAll(".nav button").forEach(b => {
+    b.classList.toggle("active", b.dataset.page === id);
+  });
+
+  const titles = {
+    dashboard: ["Обзор конкурса", "Добро пожаловать в систему оценки фотографий"],
+    participants: ["Участники", "Галерея конкурсных работ"],
+    rating: ["Оценивание", "Выставляйте баллы по каждому критерию"],
+    results: ["Итоговый рейтинг", "Результаты и победители конкурса"],
+    settings: ["Настройки", "Параметры и управление данными"]
+  };
+
+  document.getElementById("pageTitle").textContent = titles[id][0];
+  document.getElementById("pageSubtitle").textContent = titles[id][1];
+
+  if (id === "participants") renderParticipants();
+  if (id === "rating") renderRating();
+  if (id === "results") renderResults();
+  if (id === "settings") renderCriteria();
+}
+
+document.querySelectorAll(".nav button").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+/* =========================================================
+   ФОТОГРАФИИ
+========================================================= */
+
+function imageHTML(p) {
+  const url = p.photos?.[0];
+
+  if (!url) {
+    return `<div style="height:100%;display:grid;place-items:center;color:#829087">📷 Фото отсутствует</div>`;
+  }
+
+  return `
+    <img
+      src="${safe(url)}"
+      alt="Фото участника"
+      loading="lazy"
+      onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<div style=&quot;height:100%;display:grid;place-items:center;color:#829087&quot;>📷 Фото временно недоступно</div>')"
+    >
+  `;
+}
+
+function openPhotos(id) {
+  const p = participants.find(x => String(x.id) === String(id));
+  if (!p) return;
+
+  document.getElementById("modalTitle").textContent =
+    p.name + " · группа " + p.group;
+
+  document.getElementById("modalImages").innerHTML = (p.photos || []).map(url => `
+    <img
+      src="${safe(url)}"
+      alt="Работа участника"
+      onerror="this.alt='Фото недоступно'"
+    >
+  `).join("");
+
+  if (!p.photos || !p.photos.length) {
+    document.getElementById("modalImages").innerHTML =
+      '<div class="empty">Фотографии отсутствуют</div>';
+  }
+
+  document.getElementById("photoModal").classList.add("open");
+}
+
+function closeModal(event) {
+  if (!event || event.target.id === "photoModal") {
+    document.getElementById("photoModal").classList.remove("open");
+  }
+}
+
+/* =========================================================
+   КАРТОЧКИ УЧАСТНИКОВ
+========================================================= */
+
+function participantCard(p, editable = false) {
+  const sum = total(p);
+
+  return `
+    <article class="participant">
+
+      <div class="photo" onclick="openPhotos('${safe(p.id)}')">
+        ${imageHTML(p)}
+        ${p.photos.length > 1
+          ? `<span class="photo-count">📷 ${p.photos.length} фото</span>`
+          : ""}
+      </div>
+
+      <div class="card-body">
+
+        <div class="person-name">${safe(p.name)}</div>
+        <div class="person-meta">
+          Группа ${safe(p.group)} · №${safe(p.id)}
+        </div>
+
+        ${editable ? ratingInputs(p) : `
+          <div class="card-score">
+            <div>
+              <div class="score-label">Итоговая оценка</div>
+              <div class="score-number">${sum === null ? "—" : sum + " / 40"}</div>
+            </div>
+            <span class="status ${isDone(p) ? "done" : ""}">
+              ${isDone(p) ? "Оценено" : "Не оценено"}
+            </span>
+          </div>
+
+          <div class="card-buttons">
+            <button class="btn" onclick="openPhotos('${safe(p.id)}')">Фото</button>
+            <button class="btn primary" onclick="editParticipant('${safe(p.id)}')">Оценить</button>
+          </div>
+        `}
+      </div>
+    </article>
+  `;
+}
+
+/* =========================================================
+   СПИСОК УЧАСТНИКОВ
+========================================================= */
+
+function renderParticipants() {
+  let list = [...participants];
+
+  const q = (document.getElementById("search").value || "").toLowerCase();
+  const group = document.getElementById("groupFilter").value;
+  const sort = document.getElementById("sortFilter").value;
+
+  list = list.filter(p =>
+    p.name.toLowerCase().includes(q) &&
+    (!group || p.group === group)
+  );
+
+  if (sort === "score") {
+    list.sort((a, b) => (total(b) ?? -1) - (total(a) ?? -1));
+  }
+
+  if (sort === "name") {
+    list.sort((a, b) => a.name.localeCompare(b.name, "ru"));
+  }
+
+  document.getElementById("participantCount").textContent =
+    `Показано: ${list.length} из ${participants.length}`;
+
+  document.getElementById("participantsGrid").innerHTML =
+    list.length
+      ? list.map(p => participantCard(p)).join("")
+      : '<div class="empty">Участники не найдены</div>';
+}
+
+/* =========================================================
+   ФОРМА ОЦЕНИВАНИЯ
+========================================================= */
+
+function ratingInputs(p) {
+  return `
+    <div class="rating-form">
+
+      ${criteria.map((c, i) => `
+        <div class="rating-row">
+          <span>${safe(c)}</span>
+          <input
+            type="number"
+            min="0"
+            max="10"
+            step="1"
+            placeholder="0–10"
+            value="${p.scores[i] ?? ""}"
+            onchange="setScore('${safe(p.id)}',${i},this.value)"
+          >
+        </div>
+      `).join("")}
+
+      <div class="total">
+        <span>Итого</span>
+        <span id="total-${safe(p.id)}">${total(p) ?? "—"} / 40</span>
+      </div>
+
+      <div class="card-buttons">
+        <button class="btn" onclick="openPhotos('${safe(p.id)}')">Посмотреть фото</button>
+        <button class="btn primary" onclick="saveOne('${safe(p.id)}')">Сохранить</button>
+      </div>
+
+    </div>
+  `;
+}
+
+function renderRating() {
+  const q = (document.getElementById("ratingSearch").value || "").toLowerCase();
+  const group = document.getElementById("ratingGroup").value;
+
+  const list = participants.filter(p =>
+    p.name.toLowerCase().includes(q) &&
+    (!group || p.group === group)
+  );
+
+  document.getElementById("ratingGrid").innerHTML =
+    list.map(p => participantCard(p, true)).join("") ||
+    '<div class="empty">Ничего не найдено</div>';
+}
+
+function setScore(id, index, value) {
+  const p = participants.find(x => String(x.id) === String(id));
+  if (!p) return;
+
+  if (value === "") {
+    p.scores[index] = null;
+  } else {
+    const n = Number(value);
+
+    if (!Number.isInteger(n) || n < 0 || n > 10) {
+      toast("Введите целое число от 0 до 10");
+      renderRating();
+      return;
+    }
+
+    p.scores[index] = n;
+  }
+
+  const el = document.getElementById("total-" + id);
+
+  if (el) {
+    el.textContent = (total(p) ?? "—") + " / 40";
+  }
+
+  saveLocal();
+  updateStats();
+  scheduleScoreSave(p);
+}
+
+/* =========================================================
+   ПЕРЕХОД К ОЦЕНИВАНИЮ УЧАСТНИКА
+========================================================= */
+
+function editParticipant(id) {
+  const p = participants.find(x => String(x.id) === String(id));
+  if (!p) return;
+
+  showPage("rating");
+
+  document.getElementById("ratingSearch").value = p.name;
+  document.getElementById("ratingGroup").value = "";
+
+  renderRating();
+}
+
+/* =========================================================
+   СТАТИСТИКА
+========================================================= */
+
+function updateStats() {
+  const done = participants.filter(isDone);
+
+  document.getElementById("statTotal").textContent = participants.length;
+  document.getElementById("statDone").textContent = done.length;
+
+  document.getElementById("statAvg").textContent = done.length
+    ? (done.reduce((s, p) => s + total(p), 0) / done.length).toFixed(1)
+    : "—";
+
+  document.getElementById("statMax").textContent = done.length
+    ? Math.max(...done.map(total))
+    : "—";
+}
+
+/* =========================================================
+   РЕЙТИНГ
+========================================================= */
+
+function ranking() {
+  const list = participants
+    .filter(isDone)
+    .sort((a, b) => total(b) - total(a));
+
+  let previous = null;
+  let place = 0;
+
+  return list.map((p, i) => {
+    if (total(p) !== previous) {
+      place = i + 1;
+    }
+
+    previous = total(p);
+
+    return { ...p, place };
+  });
+}
+
+function renderResults() {
+  const list = ranking();
+  const medals = ["🥇", "🥈", "🥉"];
+
+  document.getElementById("podium").innerHTML = list.length
+    ? list.slice(0, 3).map((p, i) => `
+        <div class="podium-card">
+          <div class="medal">${medals[i]}</div>
+          <strong>${safe(p.name)}</strong>
+          <div class="person-meta">Группа ${safe(p.group)}</div>
+          <b>${total(p)} баллов</b>
+        </div>
+      `).join("")
+    : '<div class="empty">Пока нет оценённых участников</div>';
+
+  document.getElementById("resultsTable").innerHTML = participants.length
+    ? [
+        ...list.map(p => `
+          <tr>
+            <td class="rank ${p.place === 1 ? "gold" : ""}">${p.place}</td>
+            <td><b>${safe(p.name)}</b></td>
+            <td>${safe(p.group)}</td>
+            <td><b>${total(p)} / 40</b></td>
+            <td><span class="status done">Оценено</span></td>
+          </tr>
+        `),
+
+        ...participants.filter(p => !isDone(p)).map(p => `
+          <tr>
+            <td>—</td>
+            <td>${safe(p.name)}</td>
+            <td>${safe(p.group)}</td>
+            <td>—</td>
+            <td><span class="status">Не оценено</span></td>
+          </tr>
+        `)
+      ].join("")
+    : '<tr><td colspan="5">Нет участников</td></tr>';
+}
+
+/* =========================================================
+   ЭКСПОРТ CSV
+========================================================= */
+
+function exportCSV() {
+  const rows = [
+    ["Место", "ФИО", "Группа", ...criteria, "Итого", "Статус"]
+  ];
+
+  const places = ranking();
+
+  participants.forEach(p => {
+    const result = places.find(x => String(x.id) === String(p.id));
+
+    rows.push([
+      result?.place ?? "",
+      p.name,
+      p.group,
+      ...p.scores.map(x => x ?? ""),
+      total(p) ?? "",
+      isDone(p) ? "Оценено" : "Не оценено"
+    ]);
+  });
+
+  const csv = "\uFEFF" + rows.map(row =>
+    row.map(value => '"' + String(value).replace(/"/g, '""') + '"').join(";")
+  ).join("\r\n");
+
+  const a = document.createElement("a");
+
+  a.href = URL.createObjectURL(
+    new Blob([csv], { type: "text/csv;charset=utf-8" })
+  );
+
+  a.download = "Рейтинг_фотоконкурса.csv";
+  a.click();
+
+  URL.revokeObjectURL(a.href);
+}
+
+/* =========================================================
+   РЕЗЕРВНАЯ КОПИЯ
+========================================================= */
+
+function exportBackup() {
+  const blob = new Blob([
+    JSON.stringify({
+      participants,
+      criteria
+    }, null, 2)
+  ], {
+    type: "application/json"
+  });
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Резервная_копия_фотоконкурса.json";
+  a.click();
+
+  URL.revokeObjectURL(a.href);
+}
+
+async function importBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = async () => {
+    try {
+      const data = JSON.parse(reader.result);
+
+      if (Array.isArray(data.participants)) {
+        data.participants.forEach(saved => {
+          const p = participants.find(x => String(x.id) === String(saved.id));
+
+          if (p && Array.isArray(saved.scores)) {
+            p.scores = normalizeScores(saved.scores);
+          }
+        });
+      }
+
+      if (Array.isArray(data.criteria) && data.criteria.length === 4) {
+        criteria = data.criteria.map(String);
+      }
+
+      saveLocal();
+      renderCriteria();
+      renderParticipants();
+      renderRating();
+      renderResults();
+      updateStats();
+
+      toast("Резервная копия загружена локально");
+
+      for (const p of participants) {
+        await saveParticipantToDatabase(p);
+      }
+
+      await jsonp("saveCriteria", {
+        criteria: JSON.stringify(criteria)
+      });
+
+      toast("Резервная копия отправлена в Google Таблицу");
+    } catch (error) {
+      console.error(error);
+      toast("Ошибка чтения или импорта файла");
+    }
+  };
+
+  reader.readAsText(file);
+  event.target.value = "";
+}
+
+/* =========================================================
+   СБРОС ОЦЕНОК
+========================================================= */
+
+async function resetScores() {
+  if (!confirm("Точно сбросить все оценки? Это действие нельзя отменить без резервной копии.")) {
+    return;
+  }
+
+  for (const timer of scoreTimers.values()) {
+    clearTimeout(timer);
+  }
+
+  scoreTimers.clear();
+
+  participants.forEach(p => {
+    p.scores = [null, null, null, null];
+  });
+
+  saveLocal();
+  renderRating();
+  renderResults();
+  renderParticipants();
+  updateStats();
+
+  toast("Оценки сброшены. Синхронизация с таблицей...");
+
+  let success = true;
+
+  for (const p of participants) {
+    const result = await saveParticipantToDatabase(p);
+    if (!result) success = false;
+  }
+
+  if (success) {
+    toast("Все оценки сброшены в Google Таблице");
+  } else {
+    toast("Часть данных не удалось синхронизировать");
+  }
+}
+
+/* =========================================================
+   ФИЛЬТРЫ
+========================================================= */
+
+function initFilters() {
+  const groups = [...new Set(participants.map(p => p.group))]
+    .sort((a, b) => a.localeCompare(b, "ru", { numeric: true }));
+
+  ["groupFilter", "ratingGroup"].forEach(id => {
+    document.getElementById(id).innerHTML =
+      '<option value="">Все группы</option>' +
+      groups.map(g =>
+        `<option value="${safe(g)}">${safe(g)} группа</option>`
+      ).join("");
+  });
+}
+
+/* =========================================================
+   ЗАПУСК САЙТА
+========================================================= */
+
+async function init() {
+  setSyncStatus("Загрузка списка участников...");
+
+  try {
+    await loadParticipants();
+  } catch (error) {
+    console.error(error);
+    setSyncStatus("Ошибка загрузки data.json", "error");
+
+    document.getElementById("recentGrid").innerHTML =
+      '<div class="empty">Не удалось загрузить data.json. Проверьте файл и его расположение.</div>';
+
+    toast("Не удалось загрузить список участников");
+    return;
+  }
+
+  // Сначала показываем локальные оценки, если они есть.
+  loadLocal();
+
+  initFilters();
+  updateStats();
+
+  document.getElementById("recentGrid").innerHTML =
+    participants.slice(0, 3).map(p => participantCard(p)).join("");
+
+  renderParticipants();
+  renderRating();
+  renderResults();
+
+  // Затем загружаем актуальные общие оценки из Google Таблицы.
+  await loadDatabase();
+
+  initFilters();
+  updateStats();
+
+  document.getElementById("recentGrid").innerHTML =
+    participants.slice(0, 3).map(p => participantCard(p)).join("");
+
+  renderParticipants();
+  renderRating();
+  renderResults();
+  renderCriteria();
+}
+
+init();
+</script>
+
+</body>
+</html>

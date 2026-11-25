@@ -1,0 +1,141 @@
+
+{
+  "contest": "Мой день в стиле ЗОЖ",
+  "year": 2026,
+  "participants": [
+    {
+      "id": 1,
+      "name": "группа № 13",
+      "group": "13",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03a5e26f1ca4343d9e2e3f_bezyimyannyij.png"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "группа № 13",
+      "group": "13",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03a657974ab224a93b730d_img20261123093433.jpg"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Семенова Варвара",
+      "group": "13",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03b1976f1ca43b619e2e09_img20261123093608.jpg"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Шевелева Вероника",
+      "group": "13",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03b1d1c45c07aa2b2a1c8c_img20261123093614.jpg"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Грабельников Владимир Андреевич",
+      "group": "12",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03bac297a377c3c66c5d59_img0289.jpeg",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03bac5974ab22e863b748d_img0287.jpeg"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Азызова алёна Игоревна",
+      "group": "34",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03c934de8ec33f3deefabe_b49fb5c3ce02f88770ad59a91285ea2c.jpg"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Тархова Елизавета Владимировна",
+      "group": "34",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03c9824a052db8917f662a_img1214.jpeg",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03c98297a377df496c5ae0_img1213.jpeg"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Группа 13",
+      "group": "13",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b042bdd28697b0b42544830_7dd8ee8a_f0d7_4c72_99c7_d261368acc5e.jpg"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Семенов николай",
+      "group": "17",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b0561966f1ca4dde89e2f9c_snimok_ekrana_2026_11_24_170611.png"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Федченко Кирилл",
+      "group": "17",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b0561b06f1ca4d9679e2f1f_a28d401b_ca5e_429b_84ab_9b3c1359d63c.jfif"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Жилкин Дмитрий",
+      "group": "17",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b0561c86d2d735cd9cd503e_b45ab8b7_1d78_406e_8555_d35494e0fc5e.jfif"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Иванов Денис",
+      "group": "29",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b0563ae6d2d736953cd4f54_bdc327a2_0086_43c1_93fa_15eb72915612.jfif"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Исмаилова Елизавета Владимировна",
+      "group": "23",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b0659e0b9e5ca28993d1403_img8055.jpeg"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "13 группа",
+      "group": "13",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b068ad7974ab25ce33b73f3_13.jpg"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "13 группа",
+      "group": "13",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b069aeaaeb352666373b227_aktivnyij_otdyih.jpg",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b069b072c4f894599dbc8a5_img20261125152129.jpg"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Группа №29",
+      "group": "29",
+      "photos": [
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b06bab528697b6e4c544815_3e185e97_1da3_4c85_b746_8f7a8754b685.jfif",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b06bab5b1016b002a74222a_9573f0a5_f83a_4f16_85f3_f82e479a27da.jfif",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b06bab5b9e5ca986b3d1585_5a592dc9_d973_4a24_960d_c9cabcf0170c.jfif",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b06bab84a052dae0b7f6612_38d13320_a676_4e87_8697_e57b36200a55.jfif"
+      ]
+    }
+  ]
+}
