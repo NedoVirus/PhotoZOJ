@@ -91,14 +91,129 @@ td{padding:14px 10px;border-bottom:1px solid var(--border)}
 .criteria label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}
 .criteria input{width:100%;padding:12px;border:1px solid var(--border);border-radius:9px}
 .note{font-size:12px;color:var(--muted);line-height:1.6}
-.modal{position:fixed;inset:0;background:#101813df;z-index:20;display:none;align-items:center;justify-content:center;padding:20px}
-.modal.open{display:flex}
-.modal-content{max-width:950px;width:100%;max-height:95vh;background:white;border-radius:15px;overflow:auto;padding:15px}
-.modal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.modal-images{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.modal-images img{width:100%;max-height:70vh;object-fit:contain;background:#f1f1f1}
-.modal-close{border:0;background:#eee;border-radius:8px;padding:9px 13px}
-.toast{position:fixed;bottom:25px;right:25px;background:#1f3026;color:white;padding:13px 19px;border-radius:10px;z-index:30;display:none;font-size:13px}
+/* Полноэкранный просмотр фотографий */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 10, 7, 0.96);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-content {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  background: transparent;
+  border-radius: 0;
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  color: white;
+  padding: 5px 5px 15px;
+  flex-shrink: 0;
+}
+
+.modal-top b {
+  font-size: 15px;
+}
+
+.modal-close {
+  border: 1px solid #ffffff30;
+  background: #ffffff15;
+  color: white;
+  border-radius: 9px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  background: #ffffff30;
+}
+
+.modal-images {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.modal-images img {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  background: transparent;
+}
+
+.photo-viewer-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 15px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.photo-viewer-nav button {
+  width: 45px;
+  height: 45px;
+  border: 1px solid #ffffff35;
+  border-radius: 50%;
+  background: #ffffff15;
+  color: white;
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.photo-viewer-nav button:hover {
+  background: #ffffff35;
+}
+
+.photo-viewer-nav button:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+#photoCounter {
+  min-width: 65px;
+  text-align: center;
+  font-size: 13px;
+  color: #ffffffb0;
+}
+
+@media(max-width:600px) {
+  .modal {
+    padding: 10px;
+  }
+
+  .modal-top b {
+    font-size: 12px;
+  }
+
+  .photo-viewer-nav {
+    padding: 10px;
+  }
+}.toast{position:fixed;bottom:25px;right:25px;background:#1f3026;color:white;padding:13px 19px;border-radius:10px;z-index:30;display:none;font-size:13px}
 .sync-line{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:10px}
 .sync-dot{width:9px;height:9px;border-radius:50%;background:#d49b20;display:inline-block}
 .sync-dot.online{background:#16865a}
@@ -365,11 +480,22 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin-top:30px}
 
 <div class="modal" id="photoModal" onclick="closeModal(event)">
   <div class="modal-content">
+
     <div class="modal-top">
       <b id="modalTitle">Фотографии участника</b>
-      <button class="modal-close" onclick="closeModal()">✕ Закрыть</button>
+      <button class="modal-close" onclick="closeModal()">
+        ✕ Закрыть
+      </button>
     </div>
+
     <div class="modal-images" id="modalImages"></div>
+
+    <div class="photo-viewer-nav">
+      <button id="photoPrev" onclick="changePhoto(-1)">‹</button>
+      <span id="photoCounter">1 / 1</span>
+      <button id="photoNext" onclick="changePhoto(1)">›</button>
+    </div>
+
   </div>
 </div>
 
@@ -838,28 +964,114 @@ function imageHTML(p) {
   `;
 }
 
+let currentPhotoParticipant = null;
+let currentPhotoIndex = 0;
+
 function openPhotos(id) {
   const p = participants.find(x => String(x.id) === String(id));
+
   if (!p) return;
+
+  currentPhotoParticipant = p;
+  currentPhotoIndex = 0;
 
   document.getElementById("modalTitle").textContent =
     p.name + " · группа " + p.group;
 
-  document.getElementById("modalImages").innerHTML = (p.photos || []).map(url => `
+  document.getElementById("photoModal").classList.add("open");
+
+  document.body.style.overflow = "hidden";
+
+  renderCurrentPhoto();
+}
+
+function renderCurrentPhoto() {
+  const p = currentPhotoParticipant;
+
+  if (!p) return;
+
+  const photos = p.photos || [];
+  const container = document.getElementById("modalImages");
+
+  if (!photos.length) {
+    container.innerHTML =
+      '<div class="empty" style="color:white">Фотографии отсутствуют</div>';
+
+    document.getElementById("photoCounter").textContent = "0 / 0";
+    document.getElementById("photoPrev").disabled = true;
+    document.getElementById("photoNext").disabled = true;
+
+    return;
+  }
+
+  const url = photos[currentPhotoIndex];
+
+  container.innerHTML = `
     <img
       src="${safe(url)}"
       alt="Работа участника"
-      onerror="this.alt='Фото недоступно'"
+      onerror="this.alt='Фото временно недоступно'"
     >
-  `).join("");
+  `;
 
-  if (!p.photos || !p.photos.length) {
-    document.getElementById("modalImages").innerHTML =
-      '<div class="empty">Фотографии отсутствуют</div>';
+  document.getElementById("photoCounter").textContent =
+    `${currentPhotoIndex + 1} / ${photos.length}`;
+
+  document.getElementById("photoPrev").disabled =
+    currentPhotoIndex === 0;
+
+  document.getElementById("photoNext").disabled =
+    currentPhotoIndex === photos.length - 1;
+}
+
+function changePhoto(direction) {
+  if (!currentPhotoParticipant) return;
+
+  const photos = currentPhotoParticipant.photos || [];
+
+  currentPhotoIndex += direction;
+
+  if (currentPhotoIndex < 0) {
+    currentPhotoIndex = 0;
   }
 
-  document.getElementById("photoModal").classList.add("open");
+  if (currentPhotoIndex >= photos.length) {
+    currentPhotoIndex = photos.length - 1;
+  }
+
+  renderCurrentPhoto();
 }
+
+function closeModal(event) {
+  if (
+    !event ||
+    event.target.id === "photoModal"
+  ) {
+    document.getElementById("photoModal").classList.remove("open");
+    document.body.style.overflow = "";
+
+    currentPhotoParticipant = null;
+    currentPhotoIndex = 0;
+  }
+}
+
+document.addEventListener("keydown", function(event) {
+  const modal = document.getElementById("photoModal");
+
+  if (!modal.classList.contains("open")) return;
+
+  if (event.key === "Escape") {
+    closeModal();
+  }
+
+  if (event.key === "ArrowLeft") {
+    changePhoto(-1);
+  }
+
+  if (event.key === "ArrowRight") {
+    changePhoto(1);
+  }
+});
 
 function closeModal(event) {
   if (!event || event.target.id === "photoModal") {
