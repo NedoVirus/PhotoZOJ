@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ФотоКонкурс — Система оценки V2</title>
+<title>ФотоКонкурс — Система оценки</title>
 
 <style>
 :root {
@@ -967,6 +967,10 @@ function imageHTML(p) {
 let currentPhotoParticipant = null;
 let currentPhotoIndex = 0;
 
+// Сохраняем исходное состояние прокрутки страницы
+let previousBodyOverflow = "";
+let previousHtmlOverflow = "";
+
 function openPhotos(id) {
   const p = participants.find(x => String(x.id) === String(id));
 
@@ -978,9 +982,15 @@ function openPhotos(id) {
   document.getElementById("modalTitle").textContent =
     p.name + " · группа " + p.group;
 
-  document.getElementById("photoModal").classList.add("open");
+  // Запоминаем исходные настройки прокрутки
+  previousBodyOverflow = document.body.style.overflow;
+  previousHtmlOverflow = document.documentElement.style.overflow;
 
+  // Блокируем прокрутку только пока открыто фото
   document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+
+  document.getElementById("photoModal").classList.add("open");
 
   renderCurrentPhoto();
 }
@@ -1043,16 +1053,19 @@ function changePhoto(direction) {
 }
 
 function closeModal(event) {
-  if (
-    !event ||
-    event.target.id === "photoModal"
-  ) {
-    document.getElementById("photoModal").classList.remove("open");
-    document.body.style.overflow = "";
+  const modal = document.getElementById("photoModal");
 
-    currentPhotoParticipant = null;
-    currentPhotoIndex = 0;
-  }
+  // Закрываем только по кнопке или нажатию на затемнённый фон
+  if (event && event.target.id !== "photoModal") return;
+
+  modal.classList.remove("open");
+
+  // Восстанавливаем исходную прокрутку страницы
+  document.body.style.overflow = previousBodyOverflow;
+  document.documentElement.style.overflow = previousHtmlOverflow;
+
+  currentPhotoParticipant = null;
+  currentPhotoIndex = 0;
 }
 
 document.addEventListener("keydown", function(event) {
@@ -1073,11 +1086,7 @@ document.addEventListener("keydown", function(event) {
   }
 });
 
-function closeModal(event) {
-  if (!event || event.target.id === "photoModal") {
-    document.getElementById("photoModal").classList.remove("open");
-  }
-}
+
 
 /* =========================================================
    КАРТОЧКИ УЧАСТНИКОВ
