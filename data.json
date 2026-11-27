@@ -1,22 +1,18 @@
-
 {
   "contest": "Мой день в стиле ЗОЖ",
   "year": 2026,
   "participants": [
     {
       "id": 1,
-      "name": "группа № 13",
+      "name": "Группа №13",
       "group": "13",
       "photos": [
-        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03a5e26f1ca4343d9e2e3f_bezyimyannyij.png"
-      ]
-    },
-    {
-      "id": 2,
-      "name": "группа № 13",
-      "group": "13",
-      "photos": [
-        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03a657974ab224a93b730d_img20261123093433.jpg"
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03a5e26f1ca4343d9e2e3f_bezyimyannyij.png",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b03a657974ab224a93b730d_img20261123093433.jpg",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b042bdd28697b0b42544830_7dd8ee8a_f0d7_4c72_99c7_d261368acc5e.jpg",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b068ad7974ab25ce33b73f3_13.jpg",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b069aeaaeb352666373b227_aktivnyij_otdyih.jpg",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b069b072c4f894599dbc8a5_img20261125152129.jpg"
       ]
     },
     {
@@ -62,14 +58,6 @@
       ]
     },
     {
-      "id": 8,
-      "name": "Группа 13",
-      "group": "13",
-      "photos": [
-        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b042bdd28697b0b42544830_7dd8ee8a_f0d7_4c72_99c7_d261368acc5e.jpg"
-      ]
-    },
-    {
       "id": 9,
       "name": "Семенов николай",
       "group": "17",
@@ -94,36 +82,11 @@
       ]
     },
     {
-      "id": 12,
-      "name": "Иванов Денис",
-      "group": "29",
-      "photos": [
-        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b0563ae6d2d736953cd4f54_bdc327a2_0086_43c1_93fa_15eb72915612.jfif"
-      ]
-    },
-    {
       "id": 13,
       "name": "Исмаилова Елизавета Владимировна",
       "group": "23",
       "photos": [
         "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b0659e0b9e5ca28993d1403_img8055.jpeg"
-      ]
-    },
-    {
-      "id": 14,
-      "name": "13 группа",
-      "group": "13",
-      "photos": [
-        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b068ad7974ab25ce33b73f3_13.jpg"
-      ]
-    },
-    {
-      "id": 15,
-      "name": "13 группа",
-      "group": "13",
-      "photos": [
-        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b069aeaaeb352666373b227_aktivnyij_otdyih.jpg",
-        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b069b072c4f894599dbc8a5_img20261125152129.jpg"
       ]
     },
     {
@@ -134,7 +97,8 @@
         "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b06bab528697b6e4c544815_3e185e97_1da3_4c85_b746_8f7a8754b685.jfif",
         "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b06bab5b1016b002a74222a_9573f0a5_f83a_4f16_85f3_f82e479a27da.jfif",
         "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b06bab5b9e5ca986b3d1585_5a592dc9_d973_4a24_960d_c9cabcf0170c.jfif",
-        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b06bab84a052dae0b7f6612_38d13320_a676_4e87_8697_e57b36200a55.jfif"
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b06bab84a052dae0b7f6612_38d13320_a676_4e87_8697_e57b36200a55.jfif",
+        "https://forms.yandex.ru/u/files?path=%2F1010256492%2F6afeee9e97a3775900734dd3%2F6b0563ae6d2d736953cd4f54_bdc327a2_0086_43c1_93fa_15eb72915612.jfif"
       ]
     }
   ]
